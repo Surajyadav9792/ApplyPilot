@@ -17,6 +17,7 @@ export default function DashboardPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadedFilePath, setUploadedFilePath] = useState("");
   const [uploadedFilename, setUploadedFilename] = useState("");
+  const [resumeText, setResumeText] = useState("");
   const [recruiterEmail, setRecruiterEmail] = useState("");
   const [recruiterEmailError, setRecruiterEmailError] = useState("");
 
@@ -56,6 +57,7 @@ export default function DashboardPage() {
       if (res.data.success) {
         setUploadedFilePath(res.data.filePath);
         setUploadedFilename(res.data.filename);
+        setResumeText(res.data.resumeText || "");
         toast.success("Resume uploaded successfully!", {
           style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
           iconTheme: { primary: "#8b5cf6", secondary: "#fff" }
@@ -75,6 +77,7 @@ export default function DashboardPage() {
     setResume(null);
     setUploadedFilePath("");
     setUploadedFilename("");
+    setResumeText("");
   };
 
   const [sending, setSending] = useState(false);
@@ -148,7 +151,10 @@ export default function DashboardPage() {
     setLoading(true);
     setResult(null);
     try {
-      const res = await api.post("/ai/generate-email", { prompt: prompt.trim() });
+      const res = await api.post("/ai/generate-email", {
+        prompt: prompt.trim(),
+        resumeInfo: resumeText || null
+      });
       setResult(res.data.data);
       setSubject(res.data.data.subject || "");
       setEmailBody(res.data.data.emailBody || "");
