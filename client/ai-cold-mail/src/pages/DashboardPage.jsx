@@ -1,6 +1,7 @@
 import { useState } from "react";
 import api from "../utils/api";
 import EmailOutputCard from "../component/EmailOutputCard";
+import StructuredEmailOutput from "../component/StructuredEmailOutput";
 import { SkeletonEmailOutput } from "../component/LoadingSkeleton";
 import InputField from "../component/InputField";
 import toast from "react-hot-toast";
@@ -25,6 +26,18 @@ export default function DashboardPage() {
   const [emailBody, setEmailBody] = useState("");
   const [linkedInDM, setLinkedInDM] = useState("");
   const [followUpEmail, setFollowUpEmail] = useState("");
+
+  // Predefined structured sections
+  const [greeting, setGreeting] = useState("");
+  const [opening, setOpening] = useState("");
+  const [projectHighlight, setProjectHighlight] = useState("");
+  const [skills, setSkills] = useState("");
+  const [cta, setCta] = useState("");
+  const [signatureName, setSignatureName] = useState("");
+  const [signaturePhone, setSignaturePhone] = useState("");
+  const [signatureEmail, setSignatureEmail] = useState("");
+  const [signatureGithub, setSignatureGithub] = useState("");
+  const [signatureLinkedin, setSignatureLinkedin] = useState("");
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -101,10 +114,13 @@ export default function DashboardPage() {
 
     setSending(true);
     try {
+      const sigText = `${signatureName}\nPhone: ${signaturePhone}\nEmail: ${signatureEmail}\nGitHub: ${signatureGithub}\nLinkedIn: ${signatureLinkedin}`;
+      const fullBodyText = `${greeting}\n\n${opening}\n\n${projectHighlight}\n\n${skills}\n\n${cta}\n\n${sigText}`;
+
       const response = await api.post("/send-email", {
         to: recruiterEmail.trim(),
         subject: subject,
-        body: emailBody,
+        body: fullBodyText,
         filePath: uploadedFilePath || null
       });
 
@@ -155,11 +171,22 @@ export default function DashboardPage() {
         prompt: prompt.trim(),
         resumeInfo: resumeText || null
       });
-      setResult(res.data.data);
-      setSubject(res.data.data.subject || "");
-      setEmailBody(res.data.data.emailBody || "");
-      setLinkedInDM(res.data.data.linkedInDM || "");
-      setFollowUpEmail(res.data.data.followUpEmail || "");
+      const data = res.data.data;
+      setResult(data);
+      setSubject(data.subject || "");
+      setGreeting(data.greeting || "");
+      setOpening(data.opening || "");
+      setProjectHighlight(data.projectHighlight || "");
+      setSkills(data.skills || "");
+      setCta(data.cta || "");
+      setSignatureName(data.signature?.name || "");
+      setSignaturePhone(data.signature?.phone || "");
+      setSignatureEmail(data.signature?.email || "");
+      setSignatureGithub(data.signature?.github || "");
+      setSignatureLinkedin(data.signature?.linkedin || "");
+
+      setLinkedInDM(data.linkedInDM || "");
+      setFollowUpEmail(data.followUpEmail || "");
       toast.success("Email generated successfully!", {
         style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
         iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
@@ -396,11 +423,17 @@ export default function DashboardPage() {
               content={subject}
               onChange={(e) => setSubject(e.target.value)}
             />
-            <EmailOutputCard
-              title="Email Body"
-              icon="✉️"
-              content={emailBody}
-              onChange={(e) => setEmailBody(e.target.value)}
+            <StructuredEmailOutput
+              greeting={greeting} setGreeting={setGreeting}
+              opening={opening} setOpening={setOpening}
+              projectHighlight={projectHighlight} setProjectHighlight={setProjectHighlight}
+              skills={skills} setSkills={setSkills}
+              cta={cta} setCta={setCta}
+              name={signatureName} setName={setSignatureName}
+              phone={signaturePhone} setPhone={setSignaturePhone}
+              email={signatureEmail} setEmail={setSignatureEmail}
+              github={signatureGithub} setGithub={setSignatureGithub}
+              linkedin={signatureLinkedin} setLinkedin={setSignatureLinkedin}
             />
             <EmailOutputCard
               title="LinkedIn DM"

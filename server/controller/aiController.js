@@ -34,13 +34,27 @@ function extractJSON(text) {
   return null;
 }
 
+// Reconstruct flat email body from structured JSON for validation/compatibility
+function buildBodyText(data) {
+  const { greeting, opening, projectHighlight, skills, cta, signature } = data;
+  const name = signature?.name || "";
+  const phone = signature?.phone || "";
+  const email = signature?.email || "";
+  const github = signature?.github || "";
+  const linkedin = signature?.linkedin || "";
+  const sigText = `${name}\nPhone: ${phone}\nEmail: ${email}\nGitHub: ${github}\nLinkedIn: ${linkedin}`;
+  
+  return `${greeting || ""}\n\n${opening || ""}\n\n${projectHighlight || ""}\n\n${skills || ""}\n\n${cta || ""}\n\n${sigText}`;
+}
+
 // Programmatic cold email validator with strict 7-point check
 function validateColdEmail(emailData, resumeInfo) {
-  const { subject, emailBody } = emailData;
-  if (!subject || !emailBody) {
-    return { isValid: false, reason: "Missing subject or email body fields." };
+  const { subject, greeting, opening, projectHighlight, skills, cta, signature } = emailData;
+  if (!subject || !greeting || !opening || !projectHighlight || !skills || !cta || !signature) {
+    return { isValid: false, reason: "Missing required structured email fields." };
   }
 
+  const emailBody = buildBodyText(emailData);
   const lowerBody = emailBody.toLowerCase();
 
   // 1. Is it a cold email? (Must contain Greeting, CTA, and Signature)
@@ -52,11 +66,13 @@ function validateColdEmail(emailData, resumeInfo) {
   }
 
   // 2. Is it a cover letter? (If paragraphs are > 3 lines, or contains formal cover letter greetings/cliches)
-  const paragraphs = emailBody.split(/\n\s*\n/);
+  const paragraphs = [opening, projectHighlight, skills, cta];
   for (const para of paragraphs) {
-    const lines = para.split("\n").filter(l => l.trim().length > 0);
-    if (lines.length > 3) {
-      return { isValid: false, reason: "Looks like a cover letter because it contains paragraphs longer than 3 lines." };
+    if (para) {
+      const lines = para.split("\n").filter(l => l.trim().length > 0);
+      if (lines.length > 3) {
+        return { isValid: false, reason: "One of the sections exceeds 3 lines, which resembles a cover letter." };
+      }
     }
   }
 
@@ -149,47 +165,32 @@ exports.generateEmail = async (req, res) => {
 You are an elite B2B cold email copywriter.
 Your task is to generate a professional cold email package based on the candidate's profile details and the target job description.
 
-The generated emailBody MUST ALWAYS follow this exact structural layout:
-
-Subject: [Catchy, professional subject line]
-
-[Greeting] (e.g. Hi [Recruiter Name], or Hi Hiring Team,)
-
-[Opening Paragraph] (Exactly 2-3 lines)
-- Must mention the target company name.
-- Explain why the candidate is interested in this company (referencing their engineering culture, tech stack, or products).
-
-[Project Highlight] (Exactly one paragraph, maximum 2 lines)
-- Highlight ONLY ONE relevant project from the candidate's profile.
-- Describe the project in one brief sentence focusing on business or technical impact.
-
-[Skills] (Exactly one sentence)
-- State the core technical skills (4-5 max) that directly align with the job description.
-
-[Call to Action] (Exactly one sentence)
-- Politely ask for a brief conversation or a 10-minute chat.
-
-[Signature]
-- Name
-- Phone
-- Email
-- GitHub
-- LinkedIn
-
-CRITICAL CONSTRAINTS:
-1. The entire emailBody must be under 170 words.
-2. Never mention more than one project.
-3. Never write paragraphs longer than 3 lines.
-4. Never include candidate's CGPA.
-5. NEVER use AI clichés like "I hope this email finds you well", "I hope you are doing well", "I am writing to express my interest", or "I recently came across your profile". Start directly and naturally.
-6. Do not list more than 5 technology names in total.
-7. The output must be returned as valid JSON in the following format:
+You MUST return the output as a valid JSON object in the following format:
 {
-  "subject": "Email Subject",
-  "emailBody": "Email Body following the exact structure above",
+  "subject": "Catchy email subject line",
+  "greeting": "Greeting line (e.g. Hi [Recruiter Name], or Hi Hiring Team,)",
+  "opening": "Opening paragraph (Exactly 2-3 lines max) mentioning the company name and explaining interest in the company.",
+  "projectHighlight": "Project highlight paragraph (Exactly 1 project, max 2 lines max) describing the impact of one project.",
+  "skills": "Skills paragraph (Exactly one sentence max) listing 4-5 core technical skills that align with the job.",
+  "cta": "CTA paragraph (Exactly one sentence max) asking for a short chat.",
+  "signature": {
+    "name": "Candidate Name",
+    "phone": "Candidate Phone Number",
+    "email": "Candidate Email Address",
+    "github": "Candidate GitHub Link",
+    "linkedin": "Candidate LinkedIn Link"
+  },
   "linkedInDM": "LinkedIn DM Content",
   "followUpEmail": "Follow-up Email Content"
 }
+
+CRITICAL RULES:
+1. The combined greeting + opening + projectHighlight + skills + cta + signature text must be under 170 words.
+2. Never mention more than one project.
+3. Never write opening or projectHighlight sections longer than 3 lines.
+4. Never include candidate's CGPA.
+5. NEVER use AI clichés like "I hope this email finds you well", "I hope you are doing well", "I am writing to express my interest", or "I recently came across your profile". Start directly and naturally.
+6. Do not list more than 5 technology names in total.
 `;
 
   const userContent = resumeInfo ? PromptBuilder.build(resumeInfo, prompt) : prompt;
@@ -218,7 +219,7 @@ CRITICAL CONSTRAINTS:
       if (feedbackText) {
         messages.push({
           role: "user",
-          content: `Your previous generation failed constraints with the following validation errors:\n${feedbackText}\n\nPlease regenerate the cold email correcting these errors, strictly adhering to the 170-word limit, single project limit, and structure layout.`
+          content: `Your previous generation failed constraints with the following validation errors:\n${feedbackText}\n\nPlease regenerate the cold email correcting these errors, strictly adhering to the 170-word limit, single project limit, and JSON structure.`
         });
       }
 
@@ -252,7 +253,7 @@ CRITICAL CONSTRAINTS:
       parsedData = extractJSON(aiResponse);
       if (!parsedData) {
         console.error("Attempt failed to parse JSON:", aiResponse);
-        feedbackText = "AI response was not valid JSON. Ensure you return strictly valid JSON and nothing else.";
+        feedbackText = "AI response was not valid JSON. Ensure you return strictly valid JSON matching the schema and nothing else.";
         continue;
       }
 
@@ -284,25 +285,21 @@ CRITICAL CONSTRAINTS:
   }
 
   try {
-    const { subject, emailBody, linkedInDM, followUpEmail } = parsedData;
+    const { subject, linkedInDM, followUpEmail } = parsedData;
+    const emailBodyText = buildBodyText(parsedData);
 
     await EmailHistory.create({
       user: req.user._id,
       Prompt: prompt,
       subject,
-      emailBody,
+      emailBody: emailBodyText, // Formatted text for database schema compatibility
       linkedInDM,
       followUpEmail,
     });
 
     return res.status(200).json({
       message: "Email generated successfully",
-      data: {
-        subject,
-        emailBody,
-        linkedInDM,
-        followUpEmail,
-      },
+      data: parsedData // Return structured object to the frontend
     });
 
   } catch (error) {
