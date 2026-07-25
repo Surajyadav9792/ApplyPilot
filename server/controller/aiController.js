@@ -191,6 +191,8 @@ CRITICAL RULES:
 4. Never include candidate's CGPA.
 5. NEVER use AI clichés like "I hope this email finds you well", "I hope you are doing well", "I am writing to express my interest", or "I recently came across your profile". Start directly and naturally.
 6. Do not list more than 5 technology names in total.
+
+IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no explanation, no text before or after the JSON.
 `;
 
   const userContent = resumeInfo ? PromptBuilder.build(resumeInfo, prompt) : prompt;
@@ -226,10 +228,11 @@ CRITICAL RULES:
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
         {
-          model: "meta-llama/llama-3.1-8b-instruct:free",
+          model: "google/gemma-4-26b-a4b-it:free",
           messages: messages,
           max_tokens: 2048,
           temperature: 0.7,
+          response_format: { type: "json_object" },
         },
         {
           headers: {

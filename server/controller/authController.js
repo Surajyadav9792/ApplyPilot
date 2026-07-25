@@ -70,7 +70,7 @@ exports.registerUser = async (req, res) => {
 
     return res.status(201).json({
       message: "User registered successfully",
-      user,
+      user: { _id: user._id, username: user.username, email: user.email },
     });
   } catch (error) {
     console.error(error);
@@ -139,7 +139,7 @@ exports.login = async (req, res) => {
 
     return res.status(200).json({
       message: "Login successful",
-      user,
+      user: { _id: user._id, username: user.username, email: user.email },
       token: generateAuthToken(user), 
     });
 

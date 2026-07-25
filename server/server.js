@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express=require('express');
 const cors=require('cors');
 const connectDB=require('./config/db');
@@ -6,13 +8,13 @@ const path = require('path');
 const fs = require('fs');
 
 const app=express();
-const port=3000;
-app.use(cors());
+const PORT=process.env.PORT || 3000;
+
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
-
-const PORT=process.env.PORT || 3000; 
-
-require('dotenv').config();
 //connect to database
 connectDB();
 
