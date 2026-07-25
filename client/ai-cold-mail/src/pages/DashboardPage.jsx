@@ -245,7 +245,7 @@ export default function DashboardPage() {
         {/* Page Header */}
         <div className="mb-8 animate-fade-in-up">
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <SparklesIcon className="w-8 h-8 text-blue-400" />
+            <SparklesIcon className="w-8 h-8 text-blue-600" />
             <span>
               Generate <span className="gradient-text">Cold Emails</span>
             </span>
@@ -283,7 +283,7 @@ export default function DashboardPage() {
               placeholder="e.g., I'm a freelance web developer reaching out to SaaS startups that need landing pages. I want to offer my services at a competitive rate with fast turnaround..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="input-field resize-none text-sm leading-relaxed"
+              className="input-field resize-y text-sm leading-relaxed"
               disabled={loading || uploading || sending}
             />
           </div>
@@ -565,8 +565,8 @@ export default function DashboardPage() {
 
         {!result && !loading && (
           <div className="card py-12 px-6 text-center animate-fade-in-up-delay-2">
-            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
-              <PaperAirplaneIcon className="w-8 h-8 text-blue-500 -rotate-45" />
+            <div className="w-12 h-12 rounded-full bg-slate-50 border border-[var(--border-subtle)] flex items-center justify-center mx-auto mb-4">
+              <PaperAirplaneIcon className="w-6 h-6 text-[var(--text-muted)] -rotate-45" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Ready to Generate</h3>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
