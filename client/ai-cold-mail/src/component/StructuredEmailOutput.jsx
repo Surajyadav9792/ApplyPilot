@@ -30,11 +30,11 @@ export default function StructuredEmailOutput({
       setCopied(true);
       toast.success("Copied full email to clipboard!", {
         style: {
-          background: "#1a1a2e",
-          color: "#f0f0f5",
-          border: "1px solid rgba(255,255,255,0.1)",
+          background: "var(--bg-card)",
+          color: "var(--text-primary)",
+          border: "1px solid var(--border-subtle)",
         },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
+        iconTheme: { primary: "var(--accent-color)", secondary: "#fff" },
       });
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -43,9 +43,9 @@ export default function StructuredEmailOutput({
   };
 
   return (
-    <div className="glass-card p-6 space-y-6 border border-white/5 text-left">
+    <div className="glass-card p-6 space-y-6 text-left">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+      <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4">
         <div className="flex items-center gap-3">
           <span className="text-xl">✉️</span>
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">
@@ -54,13 +54,13 @@ export default function StructuredEmailOutput({
         </div>
         <button
           onClick={handleCopy}
-          className="p-2 rounded-lg hover:bg-white/5 transition-colors text-[var(--text-secondary)] hover:text-violet-400 flex items-center gap-1.5 text-xs font-medium"
+          className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-[var(--text-secondary)] hover:text-[var(--accent-color)] flex items-center gap-1.5 text-xs font-medium"
           title="Copy full email"
         >
           {copied ? (
             <>
-              <CheckIcon className="w-4 h-4 text-green-400" />
-              <span className="text-green-400">Copied</span>
+              <CheckIcon className="w-4 h-4 text-green-600" />
+              <span className="text-green-600">Copied</span>
             </>
           ) : (
             <>
@@ -73,72 +73,72 @@ export default function StructuredEmailOutput({
 
       {/* Greeting */}
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Greeting
         </label>
         <input
           type="text"
           value={greeting}
           onChange={(e) => setGreeting(e.target.value)}
-          className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+          className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
         />
       </div>
 
       {/* Opening */}
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Opening Paragraph (Goal & Context)
         </label>
         <textarea
           rows={3}
           value={opening}
           onChange={(e) => setOpening(e.target.value)}
-          className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors resize-y leading-relaxed"
+          className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors resize-y leading-relaxed"
         />
       </div>
 
       {/* Project Highlight */}
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Project Highlight (Impact Pitch)
         </label>
         <textarea
           rows={3}
           value={projectHighlight}
           onChange={(e) => setProjectHighlight(e.target.value)}
-          className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors resize-y leading-relaxed"
+          className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors resize-y leading-relaxed"
         />
       </div>
 
       {/* Skills */}
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Core Technical Skills
         </label>
         <input
           type="text"
           value={skills}
           onChange={(e) => setSkills(e.target.value)}
-          className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+          className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
         />
       </div>
 
       {/* CTA */}
       <div className="space-y-1.5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Call to Action
         </label>
         <input
           type="text"
           value={cta}
           onChange={(e) => setCta(e.target.value)}
-          className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+          className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-2 text-sm text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
         />
       </div>
 
       {/* Signature Grid */}
-      <div className="space-y-3 pt-2 border-t border-white/5">
-        <label className="text-xs font-semibold text-violet-400 tracking-wider uppercase block block">
+      <div className="space-y-3 pt-2 border-t border-[var(--border-subtle)]">
+        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
           Candidate Signature
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,7 +148,7 @@ export default function StructuredEmailOutput({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
             />
           </div>
           <div className="space-y-1">
@@ -157,7 +157,7 @@ export default function StructuredEmailOutput({
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
             />
           </div>
           <div className="space-y-1">
@@ -166,7 +166,7 @@ export default function StructuredEmailOutput({
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
             />
           </div>
           <div className="space-y-1">
@@ -175,7 +175,7 @@ export default function StructuredEmailOutput({
               type="text"
               value={github}
               onChange={(e) => setGithub(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
             />
           </div>
           <div className="space-y-1 md:col-span-2">
@@ -184,7 +184,7 @@ export default function StructuredEmailOutput({
               type="text"
               value={linkedin}
               onChange={(e) => setLinkedin(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/10 rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-violet-500 transition-colors"
+              className="w-full bg-[var(--bg-input)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-secondary)] focus:outline-none focus:border-[var(--border-focus)] transition-colors"
             />
           </div>
         </div>
