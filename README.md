@@ -1,6 +1,26 @@
 # ApplyPilot 🚀
 
-ApplyPilot is a premium AI-powered SaaS platform designed to help job seekers apply smarter and get more interviews. It parses user resumes, allows inputting specific job descriptions, and utilizes advanced AI to generate highly personalized, high-converting cold outreach emails.
+ApplyPilot is a premium AI-powered MERN SaaS platform designed to help job seekers apply smarter and get more interviews. It parses resumes, allows inputting target job descriptions, and utilizes advanced AI to generate highly personalized, high-converting cold outreach emails.
+
+---
+
+## 🗺️ Application Architecture & User Flow
+
+```mermaid
+graph TD
+    A[User visits Landing Page] --> B[Register / Login with OTP]
+    B --> C[Dashboard Page]
+    C --> D[Upload Resume PDF/Docx]
+    C --> E[Paste Job Description & Role Details]
+    D --> F[Node Backend Parses File]
+    E --> G[Prompt Builder Tool]
+    F --> G
+    G --> H[AI Engine Gemini/OpenRouter API]
+    H --> I[Generate Customized Cold Email]
+    I --> J[Display on Dashboard]
+    J --> K[Save to MongoDB Outreach History]
+    J --> L[Send Email via Nodemailer / Copy to Clipboard]
+```
 
 ---
 
