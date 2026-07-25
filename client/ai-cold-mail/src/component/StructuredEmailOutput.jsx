@@ -73,7 +73,7 @@ export default function StructuredEmailOutput({
 
       {/* Greeting */}
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Greeting
         </label>
         <input
@@ -86,7 +86,7 @@ export default function StructuredEmailOutput({
 
       {/* Opening */}
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Opening Paragraph (Goal & Context)
         </label>
         <textarea
@@ -99,7 +99,7 @@ export default function StructuredEmailOutput({
 
       {/* Project Highlight */}
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Project Highlight (Impact Pitch)
         </label>
         <textarea
@@ -112,7 +112,7 @@ export default function StructuredEmailOutput({
 
       {/* Skills */}
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Core Technical Skills
         </label>
         <input
@@ -125,7 +125,7 @@ export default function StructuredEmailOutput({
 
       {/* CTA */}
       <div className="space-y-1.5">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Call to Action
         </label>
         <input
@@ -138,7 +138,7 @@ export default function StructuredEmailOutput({
 
       {/* Signature Grid */}
       <div className="space-y-3 pt-2 border-t border-[var(--border-subtle)]">
-        <label className="text-xs font-bold text-[var(--accent-color)] tracking-wider uppercase block">
+        <label className="text-xs font-semibold text-[var(--text-secondary)] block">
           Candidate Signature
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
