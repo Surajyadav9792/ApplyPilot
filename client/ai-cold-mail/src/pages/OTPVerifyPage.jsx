@@ -107,21 +107,20 @@ export default function OTPVerifyPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in-up">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/10 to-cyan-500/10 border border-violet-500/25 flex items-center justify-center mx-auto mb-4 relative">
+          <div className="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center mx-auto mb-4 relative">
             <ApplyPilotLogo iconOnly={true} iconSize="w-8 h-8" />
-            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
           </div>
           <h1 className="text-2xl font-bold">Verify Your Email</h1>
           <p className="text-sm text-[var(--text-secondary)] mt-2">
             We sent a 6-digit code to{" "}
-            <span className="text-violet-400 font-medium">{email}</span>
+            <span className="text-blue-600 font-medium">{email}</span>
           </p>
         </div>
 
         {/* OTP Card */}
         <form
           onSubmit={handleSubmit}
-          className="glass-card p-8 space-y-6 animate-fade-in-up-delay-1"
+          className="card space-y-6 animate-fade-in-up-delay-1"
         >
           {/* OTP Inputs */}
           <div className="flex items-center justify-center gap-3" onPaste={handlePaste}>

@@ -43,7 +43,7 @@ export default function StructuredEmailOutput({
   };
 
   return (
-    <div className="glass-card p-6 space-y-6 text-left">
+    <div className="card space-y-6 text-left">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4">
         <div className="flex items-center gap-3">

@@ -9,7 +9,7 @@ export function SkeletonLine({ width = "100%", height = "16px" }) {
 
 export function SkeletonCard() {
   return (
-    <div className="glass-card p-5 space-y-4">
+    <div className="card space-y-4">
       <div className="flex items-center gap-3">
         <div className="skeleton w-8 h-8 rounded-full" />
         <SkeletonLine width="40%" height="14px" />

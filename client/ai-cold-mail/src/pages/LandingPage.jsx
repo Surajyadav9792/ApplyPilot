@@ -116,7 +116,7 @@ export default function LandingPage() {
 
         <div className="grid md:grid-cols-3 gap-4">
           {techFeatures.map((f) => (
-            <div key={f.title} className="glass-card p-5 text-left">
+            <div key={f.title} className="card text-left">
               <div className="w-10 h-10 rounded bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 mb-4">
                 {f.icon}
               </div>
@@ -143,7 +143,7 @@ export default function LandingPage() {
               {i < devSteps.length - 1 && (
                 <div className="hidden md:block absolute top-10 left-[calc(100%-1rem)] w-[calc(100%-2rem)] h-px bg-[var(--border-subtle)] z-0" />
               )}
-              <div className="glass-card p-5 text-center relative z-10">
+              <div className="card text-center relative z-10">
                 <span className="text-2xl font-extrabold text-blue-600/25 block">
                   {s.num}
                 </span>
@@ -160,7 +160,7 @@ export default function LandingPage() {
 
       {/* ══════ CTA BANNER ══════ */}
       <section className="py-8">
-        <div className="glass-card p-8 text-center">
+        <div className="card text-center">
           <h2 className="text-lg font-bold mb-2">
             Try Out ApplyPilot
           </h2>

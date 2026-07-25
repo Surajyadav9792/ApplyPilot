@@ -102,7 +102,7 @@
    ═══════════════════════════════════════════ */
 @layer components {
   /* Simplified clean card component */
-  .glass-card {
+  .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
@@ -110,7 +110,7 @@
     padding: 24px;
     transition: border-color 0.15s ease;
   }
-  .glass-card:hover {
+  .card:hover {
     border-color: var(--border-default);
   }
 

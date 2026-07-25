@@ -219,7 +219,7 @@ export default function DashboardPage() {
 
         <form
           onSubmit={handleGenerate}
-          className="glass-card mb-8 animate-fade-in-up-delay-1 space-y-4"
+          className="card mb-8 animate-fade-in-up-delay-1 space-y-4"
         >
           <InputField
             id="recruiter-email"
@@ -377,7 +377,7 @@ export default function DashboardPage() {
               </h2>
             </div>
 
-            <div className="glass-card flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="card flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                   Ready to send to recruiter?
@@ -448,9 +448,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Empty State */}
         {!result && !loading && (
-          <div className="glass-card py-12 px-6 text-center animate-fade-in-up-delay-2">
+          <div className="card py-12 px-6 text-center animate-fade-in-up-delay-2">
             <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
               <PaperAirplaneIcon className="w-8 h-8 text-blue-500 -rotate-45" />
             </div>

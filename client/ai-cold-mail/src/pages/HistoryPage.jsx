@@ -86,9 +86,9 @@ export default function HistoryPage() {
 
         {/* Empty State */}
         {!loading && filtered.length === 0 && (
-          <div className="glass-card p-12 text-center animate-fade-in-up">
-            <div className="w-16 h-16 rounded-2xl bg-cyan-500/10 flex items-center justify-center mx-auto mb-4">
-              <InboxIcon className="w-8 h-8 text-cyan-400" />
+          <div className="card py-12 px-6 text-center animate-fade-in-up">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+              <InboxIcon className="w-8 h-8 text-blue-500" />
             </div>
             <h3 className="text-lg font-semibold mb-2">
               {search ? "No Results Found" : "No History Yet"}
@@ -122,7 +122,7 @@ export default function HistoryPage() {
 // ─── History Item ───────────────────────────
 function HistoryItem({ item, isExpanded, onToggle }) {
   return (
-    <div className="glass-card overflow-hidden">
+    <div className="card overflow-hidden">
       {/* Header */}
       <div
         className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-white/[0.02] transition-colors"

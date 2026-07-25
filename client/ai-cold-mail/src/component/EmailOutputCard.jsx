@@ -32,7 +32,7 @@ export default function EmailOutputCard({ title, icon, content, onChange }) {
   if (!content) return null;
 
   return (
-    <div className="glass-card overflow-hidden transition-all duration-300">
+    <div className="card overflow-hidden">
       {/* Header */}
       <div
         className="flex items-center justify-between px-5 py-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
