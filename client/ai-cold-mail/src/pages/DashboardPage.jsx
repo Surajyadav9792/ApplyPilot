@@ -217,10 +217,9 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        {/* Prompt Form */}
         <form
           onSubmit={handleGenerate}
-          className="glass-card p-6 mb-8 animate-fade-in-up-delay-1 space-y-4"
+          className="glass-card mb-8 animate-fade-in-up-delay-1 space-y-4"
         >
           <InputField
             id="recruiter-email"
@@ -378,8 +377,7 @@ export default function DashboardPage() {
               </h2>
             </div>
 
-            {/* Send Email Action Panel */}
-            <div className="glass-card p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 border border-[var(--border-subtle)]">
+            <div className="glass-card flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                   Ready to send to recruiter?
@@ -452,9 +450,9 @@ export default function DashboardPage() {
 
         {/* Empty State */}
         {!result && !loading && (
-          <div className="glass-card p-12 text-center animate-fade-in-up-delay-2">
-            <div className="w-16 h-16 rounded-2xl bg-violet-500/10 flex items-center justify-center mx-auto mb-4">
-              <PaperAirplaneIcon className="w-8 h-8 text-violet-400 -rotate-45" />
+          <div className="glass-card py-12 px-6 text-center animate-fade-in-up-delay-2">
+            <div className="w-16 h-16 rounded-2xl bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
+              <PaperAirplaneIcon className="w-8 h-8 text-blue-500 -rotate-45" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Ready to Generate</h3>
             <p className="text-sm text-[var(--text-secondary)] max-w-sm mx-auto">
