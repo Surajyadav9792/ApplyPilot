@@ -239,6 +239,7 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
             Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
             "Content-Type": "application/json",
           },
+          timeout: 60000, // 60 second timeout per attempt
         }
       );
 
