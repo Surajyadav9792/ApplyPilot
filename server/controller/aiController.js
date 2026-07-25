@@ -2,6 +2,38 @@ const axios = require("axios");
 const { PromptBuilder } = require("../utils/promptBuilder");
 const EmailHistory = require("../models/EmailHistory");
 
+// Helper to extract and parse JSON from messy LLM responses
+function extractJSON(text) {
+  if (!text) return null;
+  
+  // 1. Try to parse directly
+  try {
+    return JSON.parse(text.trim());
+  } catch (e) {}
+
+  // 2. Extract content between first '{' and last '}'
+  const firstBracket = text.indexOf("{");
+  const lastBracket = text.lastIndexOf("}");
+  
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    const jsonString = text.substring(firstBracket, lastBracket + 1);
+    try {
+      return JSON.parse(jsonString);
+    } catch (e) {
+      // 3. Fallback: Clean common JSON errors like unescaped newlines in values
+      try {
+        const cleaned = jsonString.replace(/:\s*"([^"]*)"/g, (match, p1) => {
+          return ': "' + p1.replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/"/g, '\\"') + '"';
+        });
+        return JSON.parse(cleaned);
+      } catch (e2) {
+        console.error("Failed to parse cleaned JSON string:", e2);
+      }
+    }
+  }
+  return null;
+}
+
 // Generate Email
 exports.generateEmail = async (req, res) => {
   const { prompt, resumeInfo } = req.body;
@@ -55,7 +87,7 @@ Return ONLY valid JSON in the following format:
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "openrouter/free",
+        model: "google/gemini-2.5-flash:free",
         messages: [
           {
             role: "system",
@@ -77,30 +109,34 @@ Return ONLY valid JSON in the following format:
       }
     );
 
-    const aiResponse = response.data.choices[0].message.content;
-
-    // Clean up any markdown code block wrappers and extract JSON block
-    let cleanResponse = aiResponse.trim();
-    if (cleanResponse.startsWith("```")) {
-      cleanResponse = cleanResponse.replace(/^```(json)?/i, "").replace(/```$/, "").trim();
-    }
-    
-    // Extract JSON block using regex to ignore conversational preambles
-    const jsonMatch = cleanResponse.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      cleanResponse = jsonMatch[0];
+    // API Response Guards
+    const choices = response.data?.choices;
+    if (!choices || choices.length === 0) {
+      const apiError = response.data?.error?.message || "Invalid response structure from AI model";
+      throw new Error(apiError);
     }
 
-    const {
-      subject,
-      emailBody,
-      linkedInDM,
-      followUpEmail,
-    } = JSON.parse(cleanResponse);
+    const aiResponse = choices[0]?.message?.content;
+    if (!aiResponse) {
+      throw new Error("No content returned from AI model");
+    }
+
+    // Parse Response using robust extractor
+    const parsedData = extractJSON(aiResponse);
+    if (!parsedData) {
+      console.error("Raw AI response failed to parse as JSON:", aiResponse);
+      throw new Error("AI response format was invalid. Please try again.");
+    }
+
+    const { subject, emailBody, linkedInDM, followUpEmail } = parsedData;
+
+    if (!subject || !emailBody) {
+      throw new Error("AI output was missing email subject or body fields");
+    }
 
     await EmailHistory.create({
       user: req.user._id,
-      Prompt: prompt, // Fixed: Schema requires 'Prompt' with capital P
+      Prompt: prompt, // Schema requires 'Prompt' with capital P
       subject,
       emailBody,
       linkedInDM,
