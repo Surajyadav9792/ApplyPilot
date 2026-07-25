@@ -100,40 +100,55 @@
 
   /* Primary Solid Button */
   .btn-gradient {
+    height: 40px;
     background-color: var(--accent-color);
     color: white;
     font-weight: 500;
-    border: none;
+    font-size: 0.875rem;
+    border: 1px solid var(--accent-color);
     border-radius: var(--radius-md);
-    padding: 10px 24px;
+    padding: 0 20px;
     cursor: pointer;
-    transition: background-color 0.15s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    transition: none;
   }
   .btn-gradient:hover {
     background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
   }
   .btn-gradient:active {
-    transform: translateY(1px);
+    transform: none;
   }
   .btn-gradient:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background-color: var(--border-subtle);
+    border-color: var(--border-subtle);
+    color: var(--text-muted);
   }
 
-  /* Ghost Button */
+  /* Secondary Button */
   .btn-ghost {
-    background: transparent;
+    height: 40px;
+    background-color: var(--bg-surface);
     color: var(--text-secondary);
     font-weight: 500;
+    font-size: 0.875rem;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
-    padding: 10px 24px;
+    padding: 0 20px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none;
+    transition: none;
   }
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-card-hover);
     color: var(--text-primary);
     border-color: var(--border-default);
   }
