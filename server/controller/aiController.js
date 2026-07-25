@@ -87,7 +87,7 @@ Return ONLY valid JSON in the following format:
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "openrouter/free",
+        model: "meta-llama/llama-3-8b-instruct:free",
         messages: [
           {
             role: "system",
@@ -98,7 +98,7 @@ Return ONLY valid JSON in the following format:
             content: userContent,
           },
         ],
-        max_tokens: 1024,
+        max_tokens: 2048,
         temperature: 0.7,
       },
       {
