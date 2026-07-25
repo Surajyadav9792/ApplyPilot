@@ -67,9 +67,6 @@ export default function LoginPage() {
 
   return (
     <div className="page-enter min-h-screen flex items-center justify-center px-4 pt-20 pb-12 relative">
-      {/* Background Orbs */}
-      <div className="orb orb-cyan w-[350px] h-[350px] -top-20 -left-20" />
-      <div className="orb orb-violet w-[250px] h-[250px] -bottom-10 -right-20" />
 
       <div className="w-full max-w-md relative z-10">
         {/* Header */}

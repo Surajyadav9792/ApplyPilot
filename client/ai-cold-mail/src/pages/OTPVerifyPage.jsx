@@ -103,9 +103,6 @@ export default function OTPVerifyPage() {
 
   return (
     <div className="page-enter min-h-screen flex items-center justify-center px-4 pt-20 pb-12 relative">
-      {/* Background Orbs */}
-      <div className="orb orb-violet w-[300px] h-[300px] -top-20 right-0" />
-      <div className="orb orb-cyan w-[200px] h-[200px] -bottom-10 -left-10" />
 
       <div className="w-full max-w-md relative z-10">
         {/* Header */}

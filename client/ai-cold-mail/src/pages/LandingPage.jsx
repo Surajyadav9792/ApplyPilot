@@ -56,16 +56,6 @@ export default function LandingPage() {
     <div className="page-enter w-full">
       {/* ══════ HERO ══════ */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-        {/* Background Orbs */}
-        <div className="orb orb-violet w-[500px] h-[500px] -top-40 -left-40 animate-float" />
-        <div
-          className="orb orb-cyan w-[400px] h-[400px] -bottom-32 -right-32"
-          style={{ animationDelay: "2s", animation: "float 8s ease-in-out infinite" }}
-        />
-        <div
-          className="orb orb-indigo w-[300px] h-[300px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ opacity: 0.15 }}
-        />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           {/* Badge */}
@@ -192,8 +182,6 @@ export default function LandingPage() {
       {/* ══════ CTA BANNER ══════ */}
       <section className="py-24 px-4">
         <div className="max-w-3xl mx-auto text-center glass-card p-12 relative overflow-hidden">
-          <div className="orb orb-violet w-60 h-60 -top-20 -right-20" />
-          <div className="orb orb-cyan w-40 h-40 -bottom-10 -left-10" />
           <div className="relative z-10">
             <ClockIcon className="w-10 h-10 text-violet-400 mx-auto mb-4" />
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">
