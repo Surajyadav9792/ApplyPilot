@@ -13,15 +13,12 @@ export default function Footer() {
             <ApplyPilotLogo
               iconSize="w-6 h-6"
               textSize="text-base"
-              textColor="text-white"
+              textColor="text-[var(--text-primary)]"
             />
-            <span className="ml-1 border-l border-white/15 pl-3">
+            <span className="ml-1 border-l border-slate-200 pl-3">
               &copy; {new Date().getFullYear()}
             </span>
           </div>
-          <p className="text-xs text-[var(--text-muted)]">
-            Apply Smarter. Get More Interviews.
-          </p>
         </div>
       </div>
     </footer>

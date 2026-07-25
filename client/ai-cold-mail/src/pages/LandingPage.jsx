@@ -56,12 +56,6 @@ export default function LandingPage() {
     <div className="page-enter w-full max-w-4xl mx-auto px-4 py-16">
       {/* ══════ HERO ══════ */}
       <section className="text-center py-12">
-        {/* Project Badge */}
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-6">
-          <SparklesIcon className="w-3.5 h-3.5" />
-          MERN Developer Portfolio Project
-        </div>
-
         {/* Headline */}
         <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight">
           ApplyPilot: AI Cold Email Generator
