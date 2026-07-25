@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import {
   PaperAirplaneIcon,
   SparklesIcon,
+  ClipboardDocumentIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 
 export default function DashboardPage() {
@@ -138,6 +140,42 @@ export default function DashboardPage() {
     } finally {
       setSending(false);
     }
+  };
+
+  const buildFullEmailText = () => {
+    const signatureParts = [
+      signatureName,
+      signaturePhone ? `Phone: ${signaturePhone}` : "",
+      signatureEmail ? `Email: ${signatureEmail}` : "",
+      signatureGithub ? `GitHub: ${signatureGithub}` : "",
+      signatureLinkedin ? `LinkedIn: ${signatureLinkedin}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    return `${greeting}\n\n${opening}\n\n${projectHighlight}\n\n${skills}\n\n${cta}\n\nBest regards,\n${signatureParts}`;
+  };
+
+  const handleCopyAll = async () => {
+    const fullText = buildFullEmailText();
+    try {
+      await navigator.clipboard.writeText(fullText);
+      toast.success("Full email copied to clipboard!");
+    } catch {
+      toast.error("Failed to copy");
+    }
+  };
+
+  const handleDownload = () => {
+    const fullText = buildFullEmailText();
+    const element = document.createElement("a");
+    const file = new Blob([fullText], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = `${subject || "cold-email"}.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast.success("Email downloaded as .txt!");
   };
 
   const handleRecruiterEmailChange = (e) => {
@@ -365,74 +403,151 @@ export default function DashboardPage() {
           <div className="animate-fade-in-up">
             <SkeletonEmailOutput />
           </div>
-        )}
-
-        {/* Results */}
+        )}        {/* Results */}
         {result && !loading && (
-          <div className="space-y-4 animate-fade-in-up">
+          <div className="space-y-6 animate-fade-in-up">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-[var(--text-primary)] flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-400" />
-                Generated Results
+                Generated Outreach Package
               </h2>
             </div>
 
-            <div className="card flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-sm font-semibold text-[var(--text-primary)]">
-                  Ready to send to recruiter?
-                </h3>
-                <p className="text-xs text-[var(--text-secondary)] mt-1.5 max-w-md">
-                  This will send the generated cold email body and subject directly to the recruiter's email.
-                  {uploadedFilePath ? (
-                    <span className="text-green-400 block mt-1 font-medium">
-                      ✓ Attached: {uploadedFilename || "Resume PDF"}
-                    </span>
-                  ) : (
-                    <span className="text-[var(--text-muted)] block mt-1">
-                      No resume attached (Optional)
+            {/* Gmail-Style Message Card */}
+            <div className="card !p-0 overflow-hidden bg-white rounded-lg shadow-sm border border-[var(--border-subtle)]">
+              {/* Card Window Header */}
+              <div className="bg-slate-50 border-b border-[var(--border-subtle)] px-4 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-400" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400" />
+                  <div className="w-3 h-3 rounded-full bg-green-400" />
+                  <span className="text-xs text-[var(--text-muted)] font-medium ml-2">New Message</span>
+                </div>
+                <div className="text-xs text-[var(--text-muted)] font-medium">Draft</div>
+              </div>
+
+              {/* Recipients & Subject Fields */}
+              <div className="border-b border-[var(--border-subtle)] divide-y divide-[var(--border-subtle)]">
+                <div className="px-4 py-2.5 flex items-center text-sm">
+                  <span className="text-[var(--text-muted)] w-16 shrink-0 font-medium">To:</span>
+                  <input
+                    type="email"
+                    value={recruiterEmail}
+                    onChange={handleRecruiterEmailChange}
+                    placeholder="recruiter@company.com"
+                    className="w-full bg-transparent border-0 outline-none text-[var(--text-primary)] text-sm"
+                    disabled={loading || sending}
+                  />
+                  {recruiterEmailError && (
+                    <span className="text-[10px] text-red-600 font-semibold shrink-0 ml-2">
+                      {recruiterEmailError}
                     </span>
                   )}
-                </p>
+                </div>
+                <div className="px-4 py-2.5 flex items-center text-sm">
+                  <span className="text-[var(--text-muted)] w-16 shrink-0 font-medium">Subject:</span>
+                  <input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="Email Subject Line"
+                    className="w-full bg-transparent border-0 outline-none text-[var(--text-primary)] text-sm font-semibold"
+                    disabled={loading || sending}
+                  />
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={handleSend}
-                disabled={sending}
-                className="btn-gradient py-2 px-5 text-xs font-semibold flex items-center justify-center gap-2 self-start md:self-auto min-w-[120px]"
-              >
-                {sending ? (
-                  <>
-                    <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <PaperAirplaneIcon className="w-3.5 h-3.5" />
-                    Send Email
-                  </>
+
+              {/* Email Editor / Preview Body */}
+              <div className="p-6 space-y-4 max-h-[500px] overflow-y-auto bg-white">
+                <StructuredEmailOutput
+                  greeting={greeting} setGreeting={setGreeting}
+                  opening={opening} setOpening={setOpening}
+                  projectHighlight={projectHighlight} setProjectHighlight={setProjectHighlight}
+                  skills={skills} setSkills={setSkills}
+                  cta={cta} setCta={setCta}
+                  name={signatureName} setName={setSignatureName}
+                  phone={signaturePhone} setPhone={setSignaturePhone}
+                  email={signatureEmail} setEmail={setSignatureEmail}
+                  github={signatureGithub} setGithub={setSignatureGithub}
+                  linkedin={signatureLinkedin} setLinkedin={setSignatureLinkedin}
+                />
+
+                {/* Attachment File Panel */}
+                {uploadedFilePath && (
+                  <div className="mt-4 p-2.5 rounded bg-slate-50 border border-[var(--border-subtle)] flex items-center justify-between text-xs text-[var(--text-secondary)]">
+                    <span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+                      📎 Attached: {uploadedFilename || "Resume.pdf"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleRemoveFile}
+                      className="text-red-600 hover:underline font-semibold"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 )}
-              </button>
+              </div>
+
+              {/* Gmail-Style Footer Bar */}
+              <div className="bg-slate-50 border-t border-[var(--border-subtle)] px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  {/* Send Button */}
+                  <button
+                    type="button"
+                    onClick={handleSend}
+                    disabled={sending}
+                    className="btn-gradient !h-9 px-4 text-xs font-semibold flex items-center justify-center gap-1.5"
+                  >
+                    {sending ? (
+                      <>
+                        <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <PaperAirplaneIcon className="w-3.5 h-3.5" />
+                        Send
+                      </>
+                    )}
+                  </button>
+
+                  {/* Regenerate Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => handleGenerate(e)}
+                    disabled={loading}
+                    className="btn-ghost !h-9 px-3 text-xs font-medium flex items-center justify-center gap-1"
+                  >
+                    <SparklesIcon className="w-3.5 h-3.5" />
+                    Regenerate
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  {/* Copy Button */}
+                  <button
+                    type="button"
+                    onClick={handleCopyAll}
+                    className="p-2 hover:bg-slate-200 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                    title="Copy full email text"
+                  >
+                    <ClipboardDocumentIcon className="w-4 h-4" />
+                  </button>
+
+                  {/* Download Button */}
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="p-2 hover:bg-slate-200 rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+                    title="Download text file"
+                  >
+                    <ArrowDownTrayIcon className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <EmailOutputCard
-              title="Email Subject"
-              icon="📧"
-              content={subject}
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <StructuredEmailOutput
-              greeting={greeting} setGreeting={setGreeting}
-              opening={opening} setOpening={setOpening}
-              projectHighlight={projectHighlight} setProjectHighlight={setProjectHighlight}
-              skills={skills} setSkills={setSkills}
-              cta={cta} setCta={setCta}
-              name={signatureName} setName={setSignatureName}
-              phone={signaturePhone} setPhone={setSignaturePhone}
-              email={signatureEmail} setEmail={setSignatureEmail}
-              github={signatureGithub} setGithub={setSignatureGithub}
-              linkedin={signatureLinkedin} setLinkedin={setSignatureLinkedin}
-            />
             <EmailOutputCard
               title="LinkedIn DM"
               icon="💬"
