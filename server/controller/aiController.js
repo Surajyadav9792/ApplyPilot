@@ -226,7 +226,7 @@ CRITICAL RULES:
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
         {
-          model: "openrouter/free",
+          model: "meta-llama/llama-3.1-8b-instruct:free",
           messages: messages,
           max_tokens: 2048,
           temperature: 0.7,
