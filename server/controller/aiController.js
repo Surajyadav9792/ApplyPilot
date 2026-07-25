@@ -87,7 +87,7 @@ Return ONLY valid JSON in the following format:
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "google/gemini-2.5-flash:free",
+        model: "openrouter/free",
         messages: [
           {
             role: "system",
