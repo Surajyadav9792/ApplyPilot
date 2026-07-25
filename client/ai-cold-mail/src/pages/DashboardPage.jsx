@@ -247,7 +247,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold flex items-center gap-3">
             <SparklesIcon className="w-8 h-8 text-blue-600" />
             <span>
-              Generate <span className="gradient-text">Cold Emails</span>
+              Generate Cold Emails
             </span>
           </h1>
           <p className="text-[var(--text-secondary)] mt-2">

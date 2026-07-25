@@ -126,7 +126,7 @@ export default function ApplyPilotLogo({
       {/* Brand Typography & Tagline Container */}
       <div className="flex flex-col justify-center">
         <span className={`font-extrabold tracking-tight ${textSize} ${textColor} leading-none`}>
-          Apply<span className="gradient-text font-black">Pilot</span>
+          ApplyPilot
         </span>
         {showTagline && (
           <span className="text-[10px] sm:text-xs text-[var(--text-secondary)] font-medium mt-1 tracking-wider uppercase">

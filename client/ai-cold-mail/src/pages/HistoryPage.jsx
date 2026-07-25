@@ -53,9 +53,9 @@ export default function HistoryPage() {
         {/* Page Header */}
         <div className="mb-8 animate-fade-in-up">
           <h1 className="text-3xl font-bold flex items-center gap-3">
-            <ClockIcon className="w-8 h-8 text-cyan-400" />
+            <ClockIcon className="w-8 h-8 text-blue-600" />
             <span>
-              Email <span className="gradient-text">History</span>
+              Email History
             </span>
           </h1>
           <p className="text-[var(--text-secondary)] mt-2">
