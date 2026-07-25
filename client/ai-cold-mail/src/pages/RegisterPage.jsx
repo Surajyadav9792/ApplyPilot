@@ -47,16 +47,11 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await register(trimmedForm.username, trimmedForm.email, trimmedForm.password);
-      toast.success("Registration successful! Check your email for OTP.", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
-      });
+      toast.success("Registration successful! Check your email for OTP.");
       navigate("/verify-otp", { state: { email: form.email } });
     } catch (err) {
       const msg = err.response?.data?.message || "Registration failed";
-      toast.error(msg, {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

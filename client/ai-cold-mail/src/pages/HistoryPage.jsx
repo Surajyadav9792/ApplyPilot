@@ -27,9 +27,7 @@ export default function HistoryPage() {
       const res = await api.get("/ai/email-history");
       setHistory(res.data);
     } catch (err) {
-      toast.error("Failed to load history", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error("Failed to load history");
     } finally {
       setLoading(false);
     }
@@ -173,11 +171,7 @@ function OutputBlock({ label, content }) {
     try {
       await navigator.clipboard.writeText(content);
       setCopied(true);
-      toast.success("Copied!", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
-        duration: 1500,
-      });
+      toast.success("Copied!");
       setTimeout(() => setCopied(false), 2000);
     } catch {
       toast.error("Failed to copy");

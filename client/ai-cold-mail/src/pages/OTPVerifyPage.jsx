@@ -72,30 +72,22 @@ export default function OTPVerifyPage() {
     const focusIdx = Math.min(pasted.length, OTP_LENGTH - 1);
     inputRefs.current[focusIdx]?.focus();
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otpString = otp.join("");
     if (otpString.length !== OTP_LENGTH) {
-      toast.error("Please enter the complete OTP", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error("Please enter the complete OTP");
       return;
     }
 
     setLoading(true);
     try {
       await verifyOTP(email, otpString);
-      toast.success("Email verified successfully!", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
-      });
+      toast.success("Email verified successfully!");
       navigate("/dashboard", { replace: true });
     } catch (err) {
       const msg = err.response?.data?.message || "OTP verification failed";
-      toast.error(msg, {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

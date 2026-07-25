@@ -37,23 +37,16 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(trimmedEmail, form.password);
-      toast.success("Welcome back!", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
-      });
+      toast.success("Welcome back!");
       navigate("/dashboard", { replace: true });
     } catch (err) {
       const status = err.response?.status;
       const msg = err.response?.data?.message || "Login failed";
 
       if (status === 403) {
-        toast.error("Account not verified. Please verify your email first.", {
-          style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        });
+        toast.error("Account not verified. Please verify your email first.");
       } else {
-        toast.error(msg, {
-          style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        });
+        toast.error(msg);
       }
     } finally {
       setLoading(false);

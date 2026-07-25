@@ -45,9 +45,7 @@ export default function DashboardPage() {
     const file = e.target.files[0];
     if (file) {
       if (file.type !== "application/pdf") {
-        toast.error("Please upload a PDF file only", {
-          style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        });
+        toast.error("Please upload a PDF file only");
         return;
       }
       setResume(file);
@@ -73,16 +71,11 @@ export default function DashboardPage() {
         setUploadedFilePath(res.data.filePath);
         setUploadedFilename(res.data.filename);
         setResumeText(res.data.resumeText || "");
-        toast.success("Resume uploaded successfully!", {
-          style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-          iconTheme: { primary: "#8b5cf6", secondary: "#fff" }
-        });
+        toast.success("Resume uploaded successfully!");
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to upload resume";
-      toast.error(msg, {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" }
-      });
+      toast.error(msg);
     } finally {
       setUploading(false);
     }
@@ -100,17 +93,13 @@ export default function DashboardPage() {
   const handleSend = async () => {
     if (!recruiterEmail.trim()) {
       setRecruiterEmailError("Recruiter's email is required to send");
-      toast.error("Please enter a recruiter's email address first", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" }
-      });
+      toast.error("Please enter a recruiter's email address first");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(recruiterEmail.trim())) {
       setRecruiterEmailError("Please enter a valid email address");
-      toast.error("Please enter a valid recruiter's email", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" }
-      });
+      toast.error("Please enter a valid recruiter's email");
       return;
     }
 
@@ -127,16 +116,11 @@ export default function DashboardPage() {
       });
 
       if (response.data.success) {
-        toast.success("Email sent successfully to recruiter!", {
-          style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-          iconTheme: { primary: "#8b5cf6", secondary: "#fff" }
-        });
+        toast.success("Email sent successfully to recruiter!");
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to send email";
-      toast.error(msg, {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" }
-      });
+      toast.error(msg);
     } finally {
       setSending(false);
     }
@@ -189,16 +173,12 @@ export default function DashboardPage() {
     // Validate recruiter's email if entered
     if (recruiterEmail.trim() && !/\S+@\S+\.\S+/.test(recruiterEmail.trim())) {
       setRecruiterEmailError("Please enter a valid email address");
-      toast.error("Please enter a valid recruiter's email", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" }
-      });
+      toast.error("Please enter a valid recruiter's email");
       return;
     }
 
     if (!prompt.trim()) {
-      toast.error("Please enter a prompt", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error("Please enter a prompt");
       return;
     }
 
@@ -225,15 +205,10 @@ export default function DashboardPage() {
 
       setLinkedInDM(data.linkedInDM || "");
       setFollowUpEmail(data.followUpEmail || "");
-      toast.success("Email generated successfully!", {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-        iconTheme: { primary: "#8b5cf6", secondary: "#fff" },
-      });
+      toast.success("Email generated successfully!");
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to generate email";
-      toast.error(msg, {
-        style: { background: "#1a1a2e", color: "#f0f0f5", border: "1px solid rgba(255,255,255,0.1)" },
-      });
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
