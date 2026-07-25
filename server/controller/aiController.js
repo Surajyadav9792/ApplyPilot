@@ -34,6 +34,46 @@ function extractJSON(text) {
   return null;
 }
 
+// Normalize AI response field names to expected camelCase format
+function normalizeEmailData(data) {
+  if (!data) return null;
+  
+  // Helper: find a value from multiple possible keys
+  const pick = (...keys) => {
+    for (const k of keys) {
+      if (data[k] !== undefined && data[k] !== null) return data[k];
+    }
+    return undefined;
+  };
+
+  // Map common alternative field names
+  const normalized = {
+    subject: pick("subject", "Subject", "email_subject", "emailSubject"),
+    greeting: pick("greeting", "Greeting", "salutation", "Salutation"),
+    opening: pick("opening", "Opening", "introduction", "Introduction", "intro"),
+    projectHighlight: pick("projectHighlight", "project_highlight", "ProjectHighlight", "project", "Project", "projects"),
+    skills: pick("skills", "Skills", "technical_skills", "technicalSkills"),
+    cta: pick("cta", "CTA", "Cta", "call_to_action", "callToAction"),
+    signature: pick("signature", "Signature", "sign", "contact"),
+    linkedInDM: pick("linkedInDM", "linkedin_dm", "LinkedInDM", "linkedinDM", "linkedin_message"),
+    followUpEmail: pick("followUpEmail", "follow_up_email", "FollowUpEmail", "followup_email", "followUp"),
+  };
+
+  // Normalize signature sub-fields
+  if (normalized.signature && typeof normalized.signature === "object") {
+    const sig = normalized.signature;
+    normalized.signature = {
+      name: sig.name || sig.Name || "",
+      phone: sig.phone || sig.Phone || sig.phone_number || "",
+      email: sig.email || sig.Email || sig.email_address || "",
+      github: sig.github || sig.GitHub || sig.github_link || "",
+      linkedin: sig.linkedin || sig.LinkedIn || sig.linkedin_link || "",
+    };
+  }
+
+  return normalized;
+}
+
 // Reconstruct flat email body from structured JSON for validation/compatibility
 function buildBodyText(data) {
   const { greeting, opening, projectHighlight, skills, cta, signature } = data;
@@ -228,7 +268,7 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
         {
-          model: "google/gemma-4-26b-a4b-it:free",
+          model: "qwen/qwen3-8b:free",
           messages: messages,
           max_tokens: 2048,
           temperature: 0.7,
@@ -260,6 +300,9 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
         feedbackText = "AI response was not valid JSON. Ensure you return strictly valid JSON matching the schema and nothing else.";
         continue;
       }
+
+      // Normalize field names (model may return snake_case or different keys)
+      parsedData = normalizeEmailData(parsedData);
 
       // Run programmatic validator
       validationResult = validateColdEmail(parsedData, resumeInfo);
