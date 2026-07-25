@@ -235,7 +235,7 @@ export default function DashboardPage() {
           <div className="space-y-1.5">
             <label
               htmlFor="email-prompt"
-              className="block text-sm font-medium text-[var(--text-secondary)]"
+              className="block text-sm font-medium text-[var(--text-primary)]"
             >
               Your Prompt
             </label>
@@ -252,11 +252,11 @@ export default function DashboardPage() {
 
           {/* Resume Upload UI */}
           <div className="mt-4">
-            <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
               Upload Resume (Optional PDF)
             </label>
             {!resume ? (
-              <div className={`relative border-2 border-dashed border-[var(--border-subtle)] hover:border-[var(--border-default)] rounded-xl p-4 transition-colors flex flex-col items-center justify-center cursor-pointer ${(loading || uploading || sending) ? 'opacity-50 cursor-not-allowed' : ''}`}>
+              <div className={`relative border-2 border-dashed border-[var(--border-subtle)] hover:border-[var(--border-default)] rounded-md p-4 transition-colors flex flex-col items-center justify-center cursor-pointer ${(loading || uploading || sending) ? 'opacity-50 cursor-not-allowed' : ''}`}>
                 <input
                   type="file"
                   accept=".pdf,application/pdf"
@@ -277,7 +277,7 @@ export default function DashboardPage() {
                     d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
                   />
                 </svg>
-                <span className="text-xs text-[var(--text-secondary)]">
+                <span className="text-xs text-[var(--text-muted)]">
                   Click or drag to upload PDF resume
                 </span>
               </div>
@@ -307,11 +307,11 @@ export default function DashboardPage() {
                       type="button"
                       onClick={handleUpload}
                       disabled={loading || uploading || sending}
-                      className="text-xs font-semibold text-white bg-violet-600 hover:bg-violet-500 disabled:opacity-50 px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5"
+                      className="text-xs font-semibold text-white bg-[var(--accent-color)] hover:bg-[var(--accent-hover)] disabled:opacity-50 px-3 py-1.5 rounded-md flex items-center gap-1.5"
                     >
                       {uploading ? (
                         <>
-                          <div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                           Uploading...
                         </>
                       ) : (
@@ -319,7 +319,7 @@ export default function DashboardPage() {
                       )}
                     </button>
                   ) : (
-                    <span className="text-xs font-semibold text-green-400 bg-green-400/10 px-2.5 py-1 rounded-full flex items-center gap-1">
+                    <span className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-md flex items-center gap-1">
                       ✓ Uploaded
                     </span>
                   )}
@@ -327,7 +327,7 @@ export default function DashboardPage() {
                     type="button"
                     onClick={handleRemoveFile}
                     disabled={loading || uploading || sending}
-                    className="text-xs font-semibold text-red-400 hover:text-red-300 hover:bg-red-400/10 px-2.5 py-1.5 rounded-lg transition-all disabled:opacity-50"
+                    className="text-xs font-semibold text-red-600 hover:bg-red-50 px-2.5 py-1.5 rounded-md disabled:opacity-50"
                   >
                     Remove
                   </button>
@@ -343,7 +343,7 @@ export default function DashboardPage() {
             <button
               type="submit"
               disabled={loading || uploading || sending || !prompt.trim()}
-              className="btn-gradient py-2.5 px-6 text-sm flex items-center gap-2"
+              className="btn-gradient text-sm flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

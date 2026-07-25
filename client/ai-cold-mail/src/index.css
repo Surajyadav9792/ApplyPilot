@@ -26,6 +26,9 @@
   --accent-color: #2563eb;   /* Blue 600 */
   --accent-hover: #1d4ed8;   /* Blue 700 */
 
+  /* Error Accent */
+  --error-red: #dc2626;      /* Red 600 */
+
   /* Radii */
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -175,27 +178,30 @@
     border-color: var(--border-default);
   }
 
-  /* Form Input */
   .input-field {
     width: 100%;
     padding: 10px 14px;
     background: var(--bg-input);
     border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     color: var(--text-primary);
     font-family: inherit;
     font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   .input-field::placeholder {
     color: var(--text-muted);
   }
   .input-field:focus {
     border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
   }
   .input-field.error {
-    border-color: #ef4444;
+    border-color: var(--error-red);
+  }
+  .input-field.error:focus {
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
   }
   .input-field:-webkit-autofill,
   .input-field:-webkit-autofill:hover, 

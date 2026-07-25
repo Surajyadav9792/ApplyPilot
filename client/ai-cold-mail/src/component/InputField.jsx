@@ -19,7 +19,7 @@ export default function InputField({
       {label && (
         <label
           htmlFor={id}
-          className="block text-sm font-medium text-[var(--text-secondary)]"
+          className="block text-sm font-medium text-[var(--text-primary)]"
         >
           {label}
         </label>
@@ -51,7 +51,7 @@ export default function InputField({
         )}
       </div>
       {error && (
-        <p className="text-xs text-red-400 mt-1">{error}</p>
+        <p className="text-[12px] font-medium text-red-600 mt-1">{error}</p>
       )}
     </div>
   );
