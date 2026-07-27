@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
   // UI state
   const [expandedCard, setExpandedCard] = useState("email"); // default expanded card: 'email', 'linkedin', 'followup'
-  const [editMode, setEditMode] = useState({ email: false, linkedin: false, followup: false });
+  const [activeEditField, setActiveEditField] = useState(null); // 'email', 'linkedin', 'followup' or null
   const [copiedState, setCopiedState] = useState({ email: false, linkedin: false, followup: false, all: false });
   const [recruiterEmailError, setRecruiterEmailError] = useState("");
 
@@ -708,15 +708,15 @@ ${result.followUpEmail}
                           )}
                         </button>
                         <button
-                          onClick={() => setEditMode(prev => ({ ...prev, email: !prev.email }))}
+                          onClick={() => setActiveEditField(activeEditField === "email" ? null : "email")}
                           className={`p-2 rounded-lg transition-all ${
-                            editMode.email 
+                            activeEditField === "email" 
                               ? "bg-indigo-50 text-indigo-600 hover:bg-indigo-100" 
                               : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"
                           }`}
-                          title={editMode.email ? "Switch to Preview" : "Edit email"}
+                          title={activeEditField === "email" ? "Switch to Preview" : "Edit email"}
                         >
-                          {editMode.email ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+                          {activeEditField === "email" ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => generateForTone(activeTone)}
@@ -754,15 +754,23 @@ ${result.followUpEmail}
                         </div>
 
                         {/* Subject Card Display */}
-                        <div className="bg-slate-50/50 border border-slate-100/50 rounded-xl p-3.5 flex items-center gap-2">
+                        <div 
+                          onClick={() => {
+                            if (activeEditField !== "email") setActiveEditField("email");
+                          }}
+                          className="bg-slate-50/50 border border-slate-100/50 rounded-xl p-3.5 flex items-center gap-2 cursor-pointer hover:bg-slate-100/80 transition-all"
+                          title="Click to edit subject line"
+                        >
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide shrink-0">Subject</span>
                           <div className="flex-1 border-l border-slate-200 pl-3">
-                            {editMode.email ? (
+                            {activeEditField === "email" ? (
                               <input
                                 type="text"
                                 value={result.subject}
                                 onChange={(e) => setResult(prev => ({ ...prev, subject: e.target.value }))}
+                                onClick={(e) => e.stopPropagation()} // prevent click bubbling
                                 className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-bold text-slate-800 outline-none focus:border-indigo-500"
+                                autoFocus
                               />
                             ) : (
                               <span className="text-xs font-bold text-slate-800">
@@ -773,43 +781,61 @@ ${result.followUpEmail}
                         </div>
 
                         {/* Message Content Container */}
-                        {editMode.email ? (
-                          <textarea
-                            value={getCombinedEmailBody(result)}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setResult(prev => ({
-                                ...prev,
-                                greeting: null,
-                                emailBody: val
-                              }));
-                            }}
-                            rows={12}
-                            className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
-                          />
-                        ) : (
-                          <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed space-y-4">
-                            {result.greeting ? (
-                              <>
-                                <p className="font-semibold text-slate-800">{highlightVariables(result.greeting)}</p>
-                                <p>{highlightVariables(result.opening)}</p>
-                                <p>{highlightVariables(result.projectHighlight)}</p>
-                                <p>{highlightVariables(result.skills)}</p>
-                                <p>{highlightVariables(result.cta)}</p>
-                                <div className="pt-3 border-t border-slate-100/60 mt-4 text-[11px] text-slate-500">
-                                  <p className="font-medium">Best regards,</p>
-                                  <p className="font-semibold text-slate-800 mt-1">{result.signature?.name || "Suraj Yadav"}</p>
-                                  {result.signature?.phone && <p>Phone: {result.signature.phone}</p>}
-                                  {result.signature?.email && <p>Email: {result.signature.email}</p>}
-                                  {result.signature?.github && <p>GitHub: {result.signature.github}</p>}
-                                  {result.signature?.linkedin && <p>LinkedIn: {result.signature.linkedin}</p>}
-                                </div>
-                              </>
-                            ) : (
-                              <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.emailBody)}</p>
-                            )}
-                          </div>
-                        )}
+                        <div 
+                          onClick={() => {
+                            if (activeEditField !== "email") setActiveEditField("email");
+                          }}
+                          className="relative"
+                        >
+                          {activeEditField === "email" ? (
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <textarea
+                                value={getCombinedEmailBody(result)}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setResult(prev => ({
+                                    ...prev,
+                                    greeting: null,
+                                    emailBody: val
+                                  }));
+                                }}
+                                rows={12}
+                                className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
+                                autoFocus
+                              />
+                              <div className="flex justify-end mt-2">
+                                <button
+                                  onClick={() => setActiveEditField(null)}
+                                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-all"
+                                >
+                                  Done Editing
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed space-y-4 cursor-pointer hover:border-slate-300 transition-all" title="Click anywhere to edit content">
+                              {result.greeting ? (
+                                <>
+                                  <p className="font-semibold text-slate-800">{highlightVariables(result.greeting)}</p>
+                                  <p>{highlightVariables(result.opening)}</p>
+                                  <p>{highlightVariables(result.projectHighlight)}</p>
+                                  <p>{highlightVariables(result.skills)}</p>
+                                  <p>{highlightVariables(result.cta)}</p>
+                                  <div className="pt-3 border-t border-slate-100/60 mt-4 text-[11px] text-slate-500">
+                                    <p className="font-medium">Best regards,</p>
+                                    <p className="font-semibold text-slate-800 mt-1">{result.signature?.name || "Suraj Yadav"}</p>
+                                    {result.signature?.phone && <p>Phone: {result.signature.phone}</p>}
+                                    {result.signature?.email && <p>Email: {result.signature.email}</p>}
+                                    {result.signature?.github && <p>GitHub: {result.signature.github}</p>}
+                                    {result.signature?.linkedin && <p>LinkedIn: {result.signature.linkedin}</p>}
+                                  </div>
+                                </>
+                              ) : (
+                                <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.emailBody)}</p>
+                              )}
+                            </div>
+                          )}
+                        </div>
 
                         {/* Recruiter Email input for live send */}
                         <div className="bg-slate-50/50 border border-slate-100/30 rounded-xl p-3 flex items-center gap-3">
@@ -886,15 +912,15 @@ ${result.followUpEmail}
                           )}
                         </button>
                         <button
-                          onClick={() => setEditMode(prev => ({ ...prev, linkedin: !prev.linkedin }))}
+                          onClick={() => setActiveEditField(activeEditField === "linkedin" ? null : "linkedin")}
                           className={`p-2 rounded-lg transition-all ${
-                            editMode.linkedin 
+                            activeEditField === "linkedin" 
                               ? "bg-indigo-50 text-indigo-600 hover:bg-indigo-100" 
                               : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"
                           }`}
-                          title={editMode.linkedin ? "Switch to Preview" : "Edit message"}
+                          title={activeEditField === "linkedin" ? "Switch to Preview" : "Edit message"}
                         >
-                          {editMode.linkedin ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+                          {activeEditField === "linkedin" ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => generateForTone(activeTone)}
@@ -932,18 +958,36 @@ ${result.followUpEmail}
                         </div>
 
                         {/* Content Container */}
-                        {editMode.linkedin ? (
-                          <textarea
-                            value={result.linkedInDM}
-                            onChange={(e) => setResult(prev => ({ ...prev, linkedInDM: e.target.value }))}
-                            rows={6}
-                            className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
-                          />
-                        ) : (
-                          <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed">
-                            <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.linkedInDM)}</p>
-                          </div>
-                        )}
+                        <div 
+                          onClick={() => {
+                            if (activeEditField !== "linkedin") setActiveEditField("linkedin");
+                          }}
+                          className="relative"
+                        >
+                          {activeEditField === "linkedin" ? (
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <textarea
+                                value={result.linkedInDM}
+                                onChange={(e) => setResult(prev => ({ ...prev, linkedInDM: e.target.value }))}
+                                rows={6}
+                                className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
+                                autoFocus
+                              />
+                              <div className="flex justify-end mt-2">
+                                <button
+                                  onClick={() => setActiveEditField(null)}
+                                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-all"
+                                >
+                                  Done Editing
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed cursor-pointer hover:border-slate-300 transition-all" title="Click anywhere to edit content">
+                              <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.linkedInDM)}</p>
+                            </div>
+                          )}
+                        </div>
 
                         {/* Card Footer Meta */}
                         <div className="flex items-center gap-4 text-[10px] font-semibold text-slate-400 border-t border-slate-100 pt-3">
@@ -996,15 +1040,15 @@ ${result.followUpEmail}
                           )}
                         </button>
                         <button
-                          onClick={() => setEditMode(prev => ({ ...prev, followup: !prev.followup }))}
+                          onClick={() => setActiveEditField(activeEditField === "followup" ? null : "followup")}
                           className={`p-2 rounded-lg transition-all ${
-                            editMode.followup 
+                            activeEditField === "followup" 
                               ? "bg-indigo-50 text-indigo-600 hover:bg-indigo-100" 
                               : "hover:bg-slate-100 text-slate-500 hover:text-slate-900"
                           }`}
-                          title={editMode.followup ? "Switch to Preview" : "Edit email"}
+                          title={activeEditField === "followup" ? "Switch to Preview" : "Edit email"}
                         >
-                          {editMode.followup ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
+                          {activeEditField === "followup" ? <EyeIcon className="w-4 h-4" /> : <DocumentTextIcon className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => generateForTone(activeTone)}
@@ -1042,18 +1086,36 @@ ${result.followUpEmail}
                         </div>
 
                         {/* Content Container */}
-                        {editMode.followup ? (
-                          <textarea
-                            value={result.followUpEmail}
-                            onChange={(e) => setResult(prev => ({ ...prev, followUpEmail: e.target.value }))}
-                            rows={6}
-                            className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
-                          />
-                        ) : (
-                          <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed">
-                            <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.followUpEmail)}</p>
-                          </div>
-                        )}
+                        <div 
+                          onClick={() => {
+                            if (activeEditField !== "followup") setActiveEditField("followup");
+                          }}
+                          className="relative"
+                        >
+                          {activeEditField === "followup" ? (
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <textarea
+                                value={result.followUpEmail}
+                                onChange={(e) => setResult(prev => ({ ...prev, followUpEmail: e.target.value }))}
+                                rows={6}
+                                className="w-full bg-white border border-slate-200 rounded-xl p-5 text-xs font-sans text-slate-700 leading-relaxed focus:outline-none focus:border-indigo-500 resize-none shadow-sm"
+                                autoFocus
+                              />
+                              <div className="flex justify-end mt-2">
+                                <button
+                                  onClick={() => setActiveEditField(null)}
+                                  className="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg shadow-sm transition-all"
+                                >
+                                  Done Editing
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="bg-white border border-slate-200/50 rounded-xl p-5 text-slate-700 text-xs leading-relaxed cursor-pointer hover:border-slate-300 transition-all" title="Click anywhere to edit content">
+                              <p className="whitespace-pre-wrap font-sans">{highlightVariables(result.followUpEmail)}</p>
+                            </div>
+                          )}
+                        </div>
 
                         {/* Card Footer Meta */}
                         <div className="flex items-center gap-4 text-[10px] font-semibold text-slate-400 border-t border-slate-100 pt-3">
