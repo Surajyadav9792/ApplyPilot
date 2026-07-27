@@ -187,7 +187,7 @@ function validateColdEmail(emailData, resumeInfo) {
 
 // Generate Email
 exports.generateEmail = async (req, res) => {
-  const { prompt, resumeInfo } = req.body;
+  const { prompt, resumeInfo, tone = "Professional" } = req.body;
 
   if (!prompt) {
     return res.status(400).json({
@@ -201,11 +201,27 @@ exports.generateEmail = async (req, res) => {
   let parsedData = null;
   let feedbackText = "";
 
+  // Dynamic copywriting instructions based on selected variant tone
+  let toneGuideline = "";
+  if (tone === "Friendly") {
+    toneGuideline = "Write in a warm, enthusiastic, and conversational human tone. Be approachable but highly professional. Keep it engaging.";
+  } else if (tone === "Recruiter") {
+    toneGuideline = "Write in a highly clear, structured tone that directly highlights spec alignment, certifications/skills, and has a very clear, easy-to-read layout.";
+  } else if (tone === "Startup Founder") {
+    toneGuideline = "Write in a fast-paced, high-impact, peer-to-peer tone. Focus on product value, builder mindset, and metrics showing how you can ship features fast.";
+  } else if (tone === "Hiring Manager") {
+    toneGuideline = "Write in a technical, engineer-to-engineer style. Highlight specific tech stack details, code quality, and engineering accomplishments.";
+  } else {
+    // Default Professional
+    toneGuideline = "Write in a direct, confident, and professional human tone. AVOID corporate jargon and AI fluff like 'I am excited to leverage my skills to drive innovation'.";
+  }
+
   const systemPrompt = `
 You are an elite B2B cold email copywriter and outbound recruiter specialist.
 Your task is to generate a professional, high-converting cold email outreach package based on the candidate's profile details and the target job description.
 
-Write in a direct, confident, and professional human tone. AVOID corporate jargon and AI fluff like "I am excited to leverage my skills to drive innovation" or "showcases my capabilities in developing scalable applications". Instead, write like a skilled engineer showing real impact.
+Tone Guideline for this generation:
+${toneGuideline}
 
 You MUST return the output as a valid JSON object in the following format:
 {
