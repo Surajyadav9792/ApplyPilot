@@ -211,7 +211,9 @@ Additional requirements: ${prompt}
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to generate outreach";
-      const detailedErr = err.response?.data?.error ? ` (${err.response.data.error})` : "";
+      const detailedErr = err.response?.data?.error 
+        ? ` (${err.response.data.error})` 
+        : (err.message ? ` (${err.message})` : "");
       toast.error(`${msg}${detailedErr}`);
     } finally {
       setLoading(false);
@@ -407,7 +409,9 @@ ${result.followUpEmail}
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to send email";
-      const detailedErr = err.response?.data?.error ? ` (${err.response.data.error})` : "";
+      const detailedErr = err.response?.data?.error 
+        ? ` (${err.response.data.error})` 
+        : (err.message ? ` (${err.message})` : "");
       toast.error(`${msg}${detailedErr}`);
     } finally {
       setUploading(false);

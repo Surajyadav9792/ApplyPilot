@@ -28,7 +28,7 @@ const sendEmail = async (options) => {
   console.log(`Email sent to ${options.to}`);
 } catch (error) {
   console.error(`Error sending email to ${options.to}:`, error);
-  throw new Error("Email could not be sent");   
+  throw new Error(error.message || "Email could not be sent");   
  }
 };
 module.exports = sendEmail;

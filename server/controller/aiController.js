@@ -189,6 +189,13 @@ function validateColdEmail(emailData, resumeInfo) {
 exports.generateEmail = async (req, res) => {
   const { prompt, resumeInfo, tone = "Professional" } = req.body;
 
+  if (!process.env.OPENROUTER_API_KEY) {
+    return res.status(500).json({
+      message: "OpenRouter API Key is missing on the server. Please configure OPENROUTER_API_KEY in your Render dashboard environment variables.",
+      error: "Missing OPENROUTER_API_KEY"
+    });
+  }
+
   if (!prompt) {
     return res.status(400).json({
       message: "Prompt is required",
