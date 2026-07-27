@@ -406,7 +406,8 @@ ${result.followUpEmail}
       }
     } catch (err) {
       const msg = err.response?.data?.message || "Failed to send email";
-      toast.error(msg);
+      const detailedErr = err.response?.data?.error ? ` (${err.response.data.error})` : "";
+      toast.error(`${msg}${detailedErr}`);
     } finally {
       setUploading(false);
     }
