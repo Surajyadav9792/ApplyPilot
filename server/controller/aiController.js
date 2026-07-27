@@ -241,8 +241,6 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
   console.log(systemPrompt);
   console.log("=====================================================================");
 
-  let lastAiResponse = "";
-
   while (attempt < maxAttempts && !validationResult.isValid) {
     attempt++;
     console.log(`\n--- Generation Attempt ${attempt}/${maxAttempts} ---`);
@@ -259,12 +257,8 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
         }
       ];
 
-      // If we failed previous attempts, append feedback to the request (with correct alternating roles)
-      if (attempt > 1 && lastAiResponse && feedbackText) {
-        messages.push({
-          role: "assistant",
-          content: lastAiResponse,
-        });
+      // If we failed previous attempts, append feedback as a new user message
+      if (feedbackText) {
         messages.push({
           role: "user",
           content: `Your previous generation failed constraints with the following validation errors:\n${feedbackText}\n\nPlease regenerate the cold email correcting these errors, strictly adhering to the 170-word limit, single project limit, and JSON structure.`
@@ -274,7 +268,7 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
       const response = await axios.post(
         "https://openrouter.ai/api/v1/chat/completions",
         {
-          model: "openrouter/free",
+          model: "meta-llama/llama-3.3-70b-instruct",
           messages: messages,
           max_tokens: 2048,
           temperature: 0.7,
@@ -285,7 +279,7 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
             Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
             "Content-Type": "application/json",
           },
-          timeout: 60000, // 60 second timeout per attempt
+          timeout: 30000, // 30 second timeout per attempt
         }
       );
 
@@ -300,7 +294,7 @@ IMPORTANT: Return ONLY the raw JSON object. No markdown, no code fences, no expl
         throw new Error("No content returned from AI model");
       }
 
-      lastAiResponse = aiResponse;
+      console.log(`Attempt ${attempt} raw response length: ${aiResponse.length} chars`);
 
       parsedData = extractJSON(aiResponse);
       if (!parsedData) {
